@@ -39,106 +39,21 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class checkout extends Fragment implements LocationListener{
-private ImageButton imageButton;
-private EditText editText;
-private LocationManager locationManager;
-private RecyclerView recyclerView;
-private List<cart> lcart;
-private DatabaseReference databaseReference;
-private CartAdapter cartAdapter;
+public class checkout extends Fragment  {
+
 
     public checkout() {
         // Required empty public constructor
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_checkout, container, false);
-        recyclerView= view.findViewById(R.id.view_cart);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        lcart = new ArrayList<>();
-        return  view;
+        return view;
 
 
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        imageButton = view.findViewById(R.id.locationButton);
-        editText = view.findViewById(R.id.search_cart);
-        if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION
-        )!= PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[] {
-                    Manifest.permission.ACCESS_FINE_LOCATION
-            },100);
-        }
-        imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getCurrentLocation();
-            }
-        });
-
-        databaseReference = FirebaseDatabase.getInstance().getReference("cart");
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot item : snapshot.getChildren()) {
-                    cart brg = item.getValue(cart.class);
-                    lcart.add(brg);
-                }
-                cartAdapter = new CartAdapter(getContext(), lcart);
-                recyclerView.setAdapter(cartAdapter);
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    @SuppressLint("MissingPermission")
-    private void getCurrentLocation() {
-        try {
-            locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, (LocationListener) checkout.this);
-
-        } catch (Exception e) {
-
-        }
-    }
-
-
-    @Override
-    public void onLocationChanged(@NonNull Location location) {
-        Toast.makeText(getContext(), ""+location.getLatitude()+" " +location.getLongitude(), Toast.LENGTH_SHORT).show();
-        try {
-            Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
-            List<Address> addressList = geocoder.getFromLocation(location.getLatitude(),location.getLongitude(), 1);
-            String address = addressList.get(0).getAddressLine(0);
-            editText.setText(address);
-
-        } catch (Exception e) {
-            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(@NonNull String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(@NonNull String provider) {
-
-    }
 }
