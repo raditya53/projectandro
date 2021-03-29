@@ -21,7 +21,7 @@ import com.squareup.picasso.Picasso;
 
 public class DetailBarang extends AppCompatActivity {
 
-    TextView tvnama, tvdeskripsi, tvquantity, showall;
+    TextView tvnama, tvdeskripsi, tvquantity;
     ImageButton incre, decre;
     ImageView imgView;
     Button btnSubmit;
@@ -45,7 +45,6 @@ public class DetailBarang extends AppCompatActivity {
         decre = findViewById(R.id.decrement);
         imgView = findViewById(R.id.imgDetail);
         btnSubmit = findViewById(R.id.submit);
-        showall = findViewById(R.id.alltrans);
 
         tvquantity.setText("0");
         quantity = Integer.parseInt(tvquantity.getText().toString());
@@ -55,7 +54,7 @@ public class DetailBarang extends AppCompatActivity {
         uri = intent.getStringExtra("url");
         tvnama.setText(intent.getStringExtra("nama"));
         tvdeskripsi.setText(intent.getStringExtra("deksripsi"));
-        Picasso.with(this).load(uri).into(imgView);
+        Picasso.with(this).load(uri).fit().centerCrop().into(imgView);
 
         incre.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,21 +82,12 @@ public class DetailBarang extends AppCompatActivity {
                 submitRequest();
             }
         });
-
-        showall.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Intent intent1 = new Intent(DetailBarang.this, TotalCart.class);
-//                startActivity(intent1);
-            }
-        });
-
     }
 
     private void submitRequest() {
-//        Cart cart = new Cart(tvnama.getText().toString(), tvdeskripsi.getText().toString(), tvquantity.getText().toString());
-//        String uploadId = databaseReference.push().getKey();
-//        databaseReference.child(uploadId).setValue(cart);
+        cart cart = new cart(tvnama.getText().toString(), tvdeskripsi.getText().toString(), tvquantity.getText().toString());
+        String uploadId = databaseReference.push().getKey();
+        databaseReference.child(uploadId).setValue(cart);
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override

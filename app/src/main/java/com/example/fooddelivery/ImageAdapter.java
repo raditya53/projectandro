@@ -45,9 +45,9 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageHolder
     @Override
     public void onBindViewHolder(@NonNull ImageHolder holder, int position) {
         Barang brang = lst.get(position);
-        holder.tvName.setText(brang.getDeskripsi());
-        holder.tvDekripsi.setText(brang.getImageUrl());
-        Picasso.with(context).load(brang.getId()).into(holder.imageView);
+        holder.tvName.setText(brang.getNama());
+        holder.tvDekripsi.setText(brang.getDeskripsi());
+        Picasso.with(context).load(brang.getImageUrl()).fit().centerCrop().into(holder.imageView);
 
 
         holder.imageView.setOnClickListener(new View.OnClickListener() {

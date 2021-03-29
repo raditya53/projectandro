@@ -3,6 +3,9 @@ package com.example.fooddelivery;
 public class cart {
 private String nama, deskripsi, quantity;
 
+    public cart() {
+    }
+
     public cart(String nama, String deskripsi, String quantity) {
         this.nama = nama;
         this.deskripsi = deskripsi;

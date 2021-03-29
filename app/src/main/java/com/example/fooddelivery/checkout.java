@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -27,6 +28,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -36,6 +44,9 @@ private ImageButton imageButton;
 private EditText editText;
 private LocationManager locationManager;
 private RecyclerView recyclerView;
+private List<cart> lcart;
+private DatabaseReference databaseReference;
+private CartAdapter cartAdapter;
 
     public checkout() {
         // Required empty public constructor
@@ -45,7 +56,13 @@ private RecyclerView recyclerView;
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_checkout, container, false);
+        recyclerView= view.findViewById(R.id.view_cart);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        lcart = new ArrayList<>();
         return  view;
+
+
     }
 
     @Override
@@ -53,7 +70,6 @@ private RecyclerView recyclerView;
         super.onViewCreated(view, savedInstanceState);
         imageButton = view.findViewById(R.id.locationButton);
         editText = view.findViewById(R.id.search_cart);
-        recyclerView = view.findViewById(R.id.recycle_view);
         if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION
         )!= PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[] {
@@ -64,6 +80,23 @@ private RecyclerView recyclerView;
             @Override
             public void onClick(View v) {
                 getCurrentLocation();
+            }
+        });
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("cart");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot item : snapshot.getChildren()) {
+                    cart brg = item.getValue(cart.class);
+                    lcart.add(brg);
+                }
+                cartAdapter = new CartAdapter(getContext(), lcart);
+                recyclerView.setAdapter(cartAdapter);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

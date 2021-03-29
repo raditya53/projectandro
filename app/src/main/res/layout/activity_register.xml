@@ -5,26 +5,67 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".register">
-    <EditText
+    <ImageButton
+        android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="username"
-        android:ems="10"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/username"/>
+        android:background="@drawable/logo"
+        android:id="@+id/logo"
+        android:layout_centerHorizontal="true"/>
+    <TextView
+        android:id="@+id/textregist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Register"
+        android:layout_marginLeft="40dp"
+        android:textSize="25dp"
+        android:textColor="#E31E1E"
+        android:layout_below="@id/logo"/>
     <EditText
+        android:layout_below="@id/textregist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="email"
+        android:inputType="textEmailAddress"
+        android:layout_margin="10dp"
+        android:ems="15"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/email"/>
+    <EditText
+        android:layout_margin="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="fullname"
+        android:ems="15"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/email"
+        android:id="@+id/nama"/>
+    <EditText
+        android:layout_margin="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="password"
-        android:ems="10"
+        android:ems="15"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/username"
+        android:layout_below="@id/nama"
         android:id="@+id/password"/>
-    <Button
+    <EditText
+        android:layout_margin="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Submit"
+        android:hint="phone number"
+        android:phoneNumber="true"
+        android:ems="15"
+        android:layout_centerHorizontal="true"
         android:layout_below="@id/password"
+        android:id="@+id/nomorhp"/>
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:background="@drawable/background_home"
+        android:textColor="@color/white"
+        android:layout_below="@id/nomorhp"
         android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
         android:id="@+id/buttonsave"/>

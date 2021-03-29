@@ -116,7 +116,7 @@ public class nambahfoto extends AppCompatActivity {
 
                             String id = String.valueOf(System.currentTimeMillis());
 
-                            Barang barang = new Barang(id,etNama.getText().toString(), etDeskripsi.getText().toString(), downloadUri.toString());
+                            Barang barang = new Barang(etNama.getText().toString(), etDeskripsi.getText().toString(), downloadUri.toString(),id);
                             databaseReference.child(id).setValue(barang);
                             if (uploadTask.isSuccessful()) {
                                 etDeskripsi.setText("");

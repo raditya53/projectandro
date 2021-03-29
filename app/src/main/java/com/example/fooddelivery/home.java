@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,7 +34,7 @@ import java.util.List;
 
 public class home extends Fragment {
 private EditText editText;
-private Button btn1,btn2,btn3,searchbtn;
+private Button btn1,btn2,btn3;
 private RecyclerView recyclerView;
 private DatabaseReference databaseReference;
 private List<Barang> lbrg;
@@ -48,7 +49,7 @@ private ImageAdapter adapter;
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_home, container, false);
         recyclerView = (RecyclerView)view.findViewById(R.id.recycle_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
         recyclerView.setHasFixedSize(true);
         lbrg = new ArrayList<>();
         return view;
@@ -61,28 +62,22 @@ private ImageAdapter adapter;
         btn1 = view.findViewById(R.id.Kategori_Makanan);
         btn2 = view.findViewById(R.id.Kategori_minuman);
         btn3 = view.findViewById(R.id.Kategori_Desert);
-        searchbtn = view.findViewById(R.id.btnsearch);
         imageView = view.findViewById(R.id.iconsearch);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 editText.setVisibility(View.VISIBLE);
                 imageView.setVisibility(View.INVISIBLE);
-                searchbtn.setVisibility(View.VISIBLE);
+
 
             }
         });
-        searchbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SearchData(editText.getText().toString());
-            }
-        });
+
     }
     private void SearchData(String textSearch) {
         lbrg.clear();
         Toast.makeText(getContext(), "Data Dicari", Toast.LENGTH_SHORT).show();
-        Query query = databaseReference.orderByChild("deskripsi").startAt(textSearch).endAt(textSearch + "\uf8ff");
+        Query query = databaseReference.orderByChild("nama").startAt(textSearch).endAt(textSearch + "\uf8ff");
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
