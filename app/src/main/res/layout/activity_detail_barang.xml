@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DetailBarang"
+    tools:context=".DetailMenu"
     android:orientation="vertical">
 
     <ImageView
@@ -12,16 +12,32 @@
         android:layout_width="match_parent"
         android:layout_height="300dp" />
 
-    <TextView
-        android:id="@+id/namaDetail"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="Nama"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="20dp"/>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/namaDetail"
+            android:layout_width="220dp"
+            android:layout_height="50dp"
+            android:text="Nama"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:layout_marginLeft="10dp"/>
+
+        <TextView
+            android:id="@+id/hargaMenu"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Harga"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:layout_marginRight="10dp"
+            android:gravity="center_horizontal|end"/>
+
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/deskripsiDetail"

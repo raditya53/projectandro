@@ -10,20 +10,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".nambahfoto"/>
-        <activity android:name=".MenuUtama"/>
-        <activity android:name=".awal"/>
-        <activity android:name=".login"/>
-        <activity android:name=".register"/>
-        <activity android:name=".update_account"/>
+        <activity android:name=".AddMenu"/>
+        <activity android:name=".NavigasiTab"/>
+        <activity android:name=".MultiPage"/>
+        <activity android:name=".LoginPage"/>
+        <activity android:name=".RegisterAccount"/>
+        <activity android:name=".UpdateAccount"/>
         <activity android:name=".About_us"/>
-        <activity android:name=".DetailBarang"/>
+        <activity android:name=".DetailMenu"/>
 
 
     </application>
