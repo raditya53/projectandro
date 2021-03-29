@@ -8,7 +8,7 @@ import android.widget.Button;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class awal extends AppCompatActivity {
+public class MultiPage extends AppCompatActivity {
     Button button;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -18,7 +18,7 @@ public class awal extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(awal.this, login.class);
+                Intent intent = new Intent(MultiPage.this, LoginPage.class);
                 startActivity(intent);
             }
         });

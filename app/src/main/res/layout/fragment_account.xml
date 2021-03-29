@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".account">
+    tools:context=".AccountFragment">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -22,7 +22,7 @@
             android:layout_marginTop="50dp"
             android:layout_centerHorizontal="true" />
         <TextView
-            android:id="@+id/text"
+            android:id="@+id/tologinpage"
             android:layout_below="@id/photo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
         <Button
             android:layout_marginTop="60dp"
             android:id="@+id/button_update"
-            android:layout_below="@id/text"
+            android:layout_below="@id/tologinpage"
             android:layout_width="match_parent"
             android:text="Update Account"
             android:layout_height="wrap_content"/>

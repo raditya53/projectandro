@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 
-public class account extends Fragment {
+public class AccountFragment extends Fragment {
 private Button button, logout,aboutUs;
 
 

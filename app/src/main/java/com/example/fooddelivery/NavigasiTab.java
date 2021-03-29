@@ -9,14 +9,14 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class MenuUtama extends AppCompatActivity {
+public class NavigasiTab extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menuutama);
-        getFragmentPage(new home());
+        getFragmentPage(new MenuFragment());
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -24,13 +24,13 @@ public class MenuUtama extends AppCompatActivity {
                 Fragment fragment = null;
                 switch (item.getItemId()){
                     case R.id.home2:
-                        getFragmentPage(new home());
+                        getFragmentPage(new MenuFragment());
                         return true;
                     case R.id.checkout:
-                        getFragmentPage(new checkout());
+                        getFragmentPage(new CheckoutFragment());
                         return  true;
                     case R.id.account:
-                        getFragmentPage(new account());
+                        getFragmentPage(new AccountFragment());
                         return true;
 
                 }

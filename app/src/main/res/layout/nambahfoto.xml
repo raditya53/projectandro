@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".nambahfoto">
+    tools:context=".AddMenu">
     <Button
         android:id="@+id/btn_choose"
         android:layout_width="wrap_content"
@@ -14,18 +14,18 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="200dp"
         android:layout_marginTop="60dp"
-        android:id="@+id/imageView"
+        android:id="@+id/imgContainer"
         />
 
     <EditText
         android:id="@+id/et_nama"
         android:layout_width="343dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView"
+        android:layout_below="@+id/imgContainer"
         android:layout_marginTop="30dp"
-        android:hint="Name Picture"
+        android:hint="Name Menu"
         android:layout_centerHorizontal="true"/>
 
     <EditText
@@ -35,14 +35,32 @@
         android:layout_below="@+id/et_nama"
         android:layout_marginTop="15dp"
         android:layout_centerHorizontal="true"
-        android:hint="Deskripsi Picture" />
+        android:hint="Deskripsi Menu" />
+
+    <EditText
+        android:id="@+id/et_harga"
+        android:layout_width="347dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_deskripsi"
+        android:layout_marginTop="15dp"
+        android:layout_centerHorizontal="true"
+        android:hint="Harga Menu" />
+
+    <EditText
+        android:id="@+id/et_kategori"
+        android:layout_width="347dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_harga"
+        android:layout_marginTop="15dp"
+        android:layout_centerHorizontal="true"
+        android:hint="Harga Menu" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/uploadbtn"
         android:text="Upload"
-        android:layout_below="@id/et_deskripsi"
+        android:layout_below="@id/et_kategori"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"/>
 

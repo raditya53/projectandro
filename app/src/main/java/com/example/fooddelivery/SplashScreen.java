@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
-public class MainActivity extends AppCompatActivity {
+public class SplashScreen extends AppCompatActivity {
 
     int waktu = 2000;
     @Override
@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent home = new Intent(MainActivity.this, awal.class);
+                Intent home = new Intent(SplashScreen.this, MultiPage.class);
                 startActivity(home);
                 finish();
             }
