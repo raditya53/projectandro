@@ -7,9 +7,9 @@ public class DataCart {
         this.idCart = idCart;
         this.idMenu = idMenu;
         this.idCustomer = idCustomer;
-        NamaMenu = namaMenu;
-        QuantityMenu = quantityMenu;
-        HargaMenu = hargaMenu;
+        this.NamaMenu = namaMenu;
+        this.QuantityMenu = quantityMenu;
+        this.HargaMenu = hargaMenu;
     }
 
     public DataCart() {
