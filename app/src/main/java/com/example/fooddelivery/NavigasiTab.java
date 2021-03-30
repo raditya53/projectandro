@@ -41,7 +41,7 @@ public class NavigasiTab extends AppCompatActivity {
     private void getFragmentPage(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment, fragment);
-        transaction.addToBackStack(null);
+        transaction.addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.commit();
     }
 }

@@ -24,9 +24,9 @@
         android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:ems="12"
+        android:ems="15"
         android:layout_below="@id/logo"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="70dp"
         android:layout_centerHorizontal="true"
         android:hint="email"
         android:inputType="textEmailAddress"/>
@@ -40,16 +40,26 @@
         android:id="@+id/password"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:ems="12"
+        android:ems="15"
         android:layout_below="@id/username"
         android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
         android:password="true"
         android:hint="password"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/forgotpassword"
+        android:layout_below="@id/password"
+        android:text="forgot your password?"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:textColor="#0087f5"
+        android:linksClickable="true"/>
     <Button
         android:background="@drawable/background_home"
         android:id="@+id/Button_start"
-        android:layout_width="150dp"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:text="Login"
         android:textColor="@color/white"
@@ -64,6 +74,7 @@
         android:layout_height="wrap_content"
         android:text="haven't account ? sign up here"
         android:textColor="#0087f5"
+        android:layout_marginTop="5dp"
         android:linksClickable="true"/>
 
 </RelativeLayout>

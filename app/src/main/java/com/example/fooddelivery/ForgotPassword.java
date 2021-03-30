@@ -8,21 +8,20 @@ import android.widget.ImageButton;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class UpdateAccount extends AppCompatActivity {
-ImageButton imageButton;
+public class ForgotPassword extends AppCompatActivity {
+    ImageButton imageButton;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_update_account);
+        setContentView(R.layout.activity_forgot_password);
         imageButton = findViewById(R.id.back);
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(UpdateAccount.this, NavigasiTab.class);
+                Intent intent = new Intent(ForgotPassword.this, LoginPage.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
             }
         });
-
     }
 }

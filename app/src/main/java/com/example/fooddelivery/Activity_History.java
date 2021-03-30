@@ -20,6 +20,8 @@ public class Activity_History  extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(Activity_History.this, NavigasiTab.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+
             }
         });
     }
