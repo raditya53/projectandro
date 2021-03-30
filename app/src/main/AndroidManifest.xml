@@ -24,6 +24,7 @@
         <activity android:name=".UpdateAccount"/>
         <activity android:name=".About_us"/>
         <activity android:name=".DetailMenu"/>
+        <activity android:name=".Activity_History"/>
 
 
     </application>

@@ -66,26 +66,26 @@ public class CheckoutFragment extends Fragment implements LocationListener  {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Maps = view.findViewById(R.id.locationButton);
-        etLocation = view.findViewById(R.id.search_cart);
+//        Maps = view.findViewById(R.id.locationButton);
+//        etLocation = view.findViewById(R.id.search_cart);
         recyclerView = view.findViewById(R.id.view_cart);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         dataCartList = new ArrayList<>();
 
-        Maps.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION
-                )!= PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(getActivity(), new String[] {
-                            Manifest.permission.ACCESS_FINE_LOCATION
-                    },100);
-                }
-                getCurrentLocation();
-            }
-        });
+//        Maps.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION
+//                )!= PackageManager.PERMISSION_GRANTED) {
+//                    ActivityCompat.requestPermissions(getActivity(), new String[] {
+//                            Manifest.permission.ACCESS_FINE_LOCATION
+//                    },100);
+//                }
+//                getCurrentLocation();
+//            }
+//        });
     }
 
     private void showAllCart() {

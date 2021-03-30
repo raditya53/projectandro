@@ -14,7 +14,7 @@ import android.widget.Button;
 
 
 public class AccountFragment extends Fragment {
-private Button button, logout,aboutUs;
+private Button update, logout,aboutUs, history;
 
 
     @Override
@@ -22,5 +22,43 @@ private Button button, logout,aboutUs;
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_account, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        update = view.findViewById(R.id.button_update);
+        history = view.findViewById(R.id.button_history);
+        aboutUs = view.findViewById(R.id.aboutUs);
+        logout = view.findViewById(R.id.button_logout);
+
+        update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), UpdateAccount.class);
+                startActivity(intent);
+            }
+        });
+        history.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), Activity_History.class);
+                startActivity(intent);
+            }
+        });
+        aboutUs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), About_us.class);
+                startActivity(intent);
+            }
+        });
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), MultiPage.class);
+                startActivity(intent);
+            }
+        });
     }
 }

@@ -60,7 +60,7 @@ public class DetailMenu extends AppCompatActivity {
         Uri = intent.getStringExtra("url");
         IdMenu = intent.getStringExtra("id");
 
-        Picasso.with(this).load(Uri).into(imageView);
+        Picasso.with(this).load(Uri).fit().centerCrop().into(imageView);
 
         increment.setOnClickListener(new View.OnClickListener() {
             @Override
