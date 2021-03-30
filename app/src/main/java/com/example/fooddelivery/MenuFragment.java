@@ -1,5 +1,6 @@
 package com.example.fooddelivery;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -12,12 +13,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.transition.Transition;
 import android.transition.TransitionManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +34,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.core.Tag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,13 +43,14 @@ import java.util.List;
 public class MenuFragment extends Fragment {
 
     private EditText etSearch;
-    private Button catMakanan,catMinuman,catDesert;
+    private ImageButton catMakanan,catMinuman,catDesert;
     private RecyclerView recyclerView;
     private DatabaseReference databaseReference;
     private List<DataMenu> menuList;
     private ImageView imgSearch;
     private MenuAdapter adapter;
     private TextView addmenu;
+    private FrameLayout layout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,16 +67,29 @@ public class MenuFragment extends Fragment {
 
         etSearch = view.findViewById(R.id.search_bar);
         catMakanan = view.findViewById(R.id.Kategori_Makanan);
-        catMinuman = view.findViewById(R.id.Kategori_minuman);
+        catMinuman = view.findViewById(R.id.Kategori_Minuman);
         catDesert = view.findViewById(R.id.Kategori_Desert);
         addmenu = view.findViewById(R.id.addData);
+        layout = view.findViewById(R.id.home1);
 
         imgSearch = view.findViewById(R.id.iconsearch);
         imgSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                etSearch.setText("");
                 etSearch.setVisibility(View.VISIBLE);
                 imgSearch.setVisibility(View.INVISIBLE);
+                etSearch.requestFocus();
+                etSearch.setFocusableInTouchMode(true);
+                InputMethodManager imp = (InputMethodManager)  getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                imp.showSoftInput(etSearch, InputMethodManager.SHOW_IMPLICIT);
+            }
+        });
+        layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                etSearch.setVisibility(View.INVISIBLE);
+                imgSearch.setVisibility(View.VISIBLE);
             }
         });
 

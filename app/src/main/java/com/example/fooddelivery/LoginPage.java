@@ -23,7 +23,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LoginPage extends AppCompatActivity {
     private Button login;
-    private TextView ToSignUp;
+    private TextView ToSignUp,forgotpass;
     private EditText etEmail, etPassword;
 
     private FirebaseAuth firebaseAuth;
@@ -37,6 +37,7 @@ public class LoginPage extends AppCompatActivity {
         ToSignUp = findViewById(R.id.signup);
         etEmail = findViewById(R.id.username);
         etPassword = findViewById(R.id.password);
+        forgotpass = findViewById(R.id.forgotpassword);
 
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -52,8 +53,19 @@ public class LoginPage extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(LoginPage.this, RegisterAccount.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
             }
         });
+        forgotpass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginPage.this, ForgotPassword.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
+            }
+        });
+
 
     }
 

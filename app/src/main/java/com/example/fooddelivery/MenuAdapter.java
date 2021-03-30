@@ -1,5 +1,6 @@
 package com.example.fooddelivery;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
@@ -61,6 +63,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuHolder> {
                 intent.putExtra("harga", dataMenu.getHarga());
                 intent.putExtra("url", dataMenu.getImgUrl());
                 ctx.startActivity(intent);
+                ((Activity)ctx).overridePendingTransition(R.anim.push_up_in,R.anim.push_up_out);
             }
         });
     }
