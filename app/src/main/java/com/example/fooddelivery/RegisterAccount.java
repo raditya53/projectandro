@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 
@@ -30,6 +31,7 @@ public class RegisterAccount extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
     private FirebaseStorage firebaseStorage;
+    private DatabaseReference firebaseDatabase;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,6 +45,8 @@ public class RegisterAccount extends AppCompatActivity {
         etPassword = findViewById(R.id.password);
         etPhoneNumber = findViewById(R.id.nomorhp);
         ToLoginPage = findViewById(R.id.tologinpage);
+
+        firebaseDatabase = FirebaseDatabase.getInstance().getReference("Users");
 
         btnRegister = findViewById(R.id.buttonsave);
         btnRegister.setOnClickListener(new View.OnClickListener() {
@@ -102,9 +106,7 @@ public class RegisterAccount extends AppCompatActivity {
                                    DataUser user = new DataUser(id, etFullname.getText().toString(), etEmail.getText().toString(), etPassword.getText().toString(), etPhoneNumber.getText().toString(),uri.toString());
 
                                    //new entry to database user
-                                   FirebaseDatabase.getInstance().getReference().child("Users")
-                                           .child(id)
-                                           .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                   firebaseDatabase.child(id).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                                        @Override
                                        public void onComplete(@NonNull Task<Void> task) {
                                            if(task.isSuccessful()) {
