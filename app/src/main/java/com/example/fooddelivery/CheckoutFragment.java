@@ -36,6 +36,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -65,6 +66,7 @@ public class CheckoutFragment extends Fragment implements LocationListener  {
 
     private CheckoutAdapter adapter;
     private int total = 0;
+    private ValueEventListener listener;
 
     public CheckoutFragment() {
         // Required empty public constructor
@@ -117,27 +119,12 @@ public class CheckoutFragment extends Fragment implements LocationListener  {
     }
 
     private void checkoutMenu() {
-        databaseReference.orderByChild("idCustomer").equalTo(userUID).addValueEventListener(new ValueEventListener() {
+        databaseReference.orderByChild("idCustomer").equalTo(userUID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int i = 1;
                 String idTransaksi = String.valueOf(System.currentTimeMillis());
-                Map<String, String> trans = new HashMap<>();
-                trans.put("idTransaksi", idTransaksi);
-                trans.put("idCustomer",userUID);
-                for (DataSnapshot item : snapshot.getChildren()) {
-                    DataCart dataCart = item.getValue(DataCart.class);
-                    trans.put("idCart"+i,dataCart.getIdCart());
-                    i++;
-                }
-                trans.put("totalHarga",String.valueOf(total));
-                trans.put("paymentStatus", "Unverified");
-                trans.put("deliverStatus", "Shipping");
-                trans.put("buktiPembayaran", " ");
-
                 Intent intent = new Intent(getContext(), PaymentPage.class);
                 intent.putExtra("idTransaksi", idTransaksi);
-                intent.putExtra("hashmap", (Serializable) trans);
                 intent.putExtra("totalHarga", total);
                 startActivity(intent);
             }
@@ -147,25 +134,19 @@ public class CheckoutFragment extends Fragment implements LocationListener  {
 
             }
         });
-
-        String idTransaksi = String.valueOf(System.currentTimeMillis());
-        Intent intent = new Intent(getContext(), PaymentPage.class);
-        intent.putExtra("idTransaksi", idTransaksi);
-        intent.putExtra("total", total);
-        startActivity(intent);
     }
 
     private void showAllCart() {
-        databaseReference.orderByChild("idCustomer").equalTo(userUID).addValueEventListener(new ValueEventListener() {
+        listener = databaseReference.orderByChild("idCustomer").equalTo(userUID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot item : snapshot.getChildren()) {
-
                     DataCart dataCart = item.getValue(DataCart.class);
                     dataCartList.add(dataCart);
                     total = total + Integer.parseInt(dataCart.getHargaMenu());
                 }
                 totalHarga.setText(String.valueOf(total));
+                databaseReference.removeEventListener(listener);
                 adapter = new CheckoutAdapter(getContext(), dataCartList);
                 recyclerView.setAdapter(adapter);
             }
@@ -221,6 +202,7 @@ public class CheckoutFragment extends Fragment implements LocationListener  {
     @Override
     public void onResume() {
         super.onResume();
+        dataCartList.clear();
         showAllCart();
     }
 }

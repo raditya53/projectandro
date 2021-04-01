@@ -34,6 +34,7 @@ public class DetailMenu extends AppCompatActivity {
     private boolean isExist;
 
     private DatabaseReference databaseReference;
+    private ValueEventListener listener;
 
 
     @Override
@@ -126,7 +127,7 @@ public class DetailMenu extends AppCompatActivity {
     }
 
     private void checkMenuInYourCart(String idmenu) {
-        databaseReference.orderByChild("idMenu").equalTo(idmenu).addValueEventListener(new ValueEventListener() {
+        listener = databaseReference.orderByChild("idMenu").equalTo(idmenu).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                if(snapshot.exists()) {
@@ -148,24 +149,36 @@ public class DetailMenu extends AppCompatActivity {
 
             }
         });
+        databaseReference.removeEventListener(listener);
     }
 
     private void addToCart(String idMenu, String idCart) {
         int harga = Integer.parseInt(tvQuantity.getText().toString()) * Integer.parseInt(tvHarga.getText().toString());
         DataCart cart = new DataCart(idCart, idMenu, idCust, tvNama.getText().toString(), tvQuantity.getText().toString(), String.valueOf(harga));
-        databaseReference.child(idCart).setValue(cart);
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference.child(idCart).setValue(cart).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(!btnSubmit.getText().toString().equals("HAPUS")) {
-                    Toast.makeText(DetailMenu.this, "Barang Berhasil ditambah", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(DetailMenu.this, "Barang Gagal ditambah", Toast.LENGTH_SHORT).show();
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(DetailMenu.this, "Barang Berhasil ditambah", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        databaseReference.child("cart").removeEventListener(listener);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        databaseReference.child("cart").removeEventListener(listener);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        databaseReference.child("cart").removeEventListener(listener);
     }
 }

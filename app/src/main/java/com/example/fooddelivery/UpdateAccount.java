@@ -100,7 +100,7 @@ Button btnUpdate;
     private void openFile() {
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
 
