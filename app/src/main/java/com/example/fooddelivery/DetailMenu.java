@@ -66,6 +66,11 @@ public class DetailMenu extends AppCompatActivity {
 
         checkMenuInYourCart(IdMenu);
 
+        if(isExist == false) {
+            Quantity = 0;
+            IdCartNow = String.valueOf(System.currentTimeMillis());
+        }
+
         increment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,8 +140,7 @@ public class DetailMenu extends AppCompatActivity {
                        }
                    }
                } else {
-                   Quantity = 0;
-                   IdCartNow = String.valueOf(System.currentTimeMillis());
+                   isExist = false;
                }
             }
             @Override
@@ -153,7 +157,9 @@ public class DetailMenu extends AppCompatActivity {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Toast.makeText(DetailMenu.this, "Barang Berhasil ditambah", Toast.LENGTH_SHORT).show();
+                if(!btnSubmit.getText().toString().equals("HAPUS")) {
+                    Toast.makeText(DetailMenu.this, "Barang Berhasil ditambah", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override

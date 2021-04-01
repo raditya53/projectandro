@@ -26,7 +26,7 @@ public class AccountFragment extends Fragment {
 private Button update, logout,aboutUs, history;
 
 private DatabaseReference databaseReference;
-private FirebaseUser firebaseAuth;
+private FirebaseAuth firebaseAuth;
 
 private String userUID;
 
@@ -47,10 +47,8 @@ private String userUID;
         logout = view.findViewById(R.id.button_logout);
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Users");
-        firebaseAuth = FirebaseAuth.getInstance().getCurrentUser();
+        firebaseAuth = FirebaseAuth.getInstance();
         userUID = firebaseAuth.getUid();
-
-
 
         update.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,6 +92,7 @@ private String userUID;
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                firebaseAuth.signOut();
                 Intent intent = new Intent(getContext(), MultiPage.class);
                 startActivity(intent);
             }

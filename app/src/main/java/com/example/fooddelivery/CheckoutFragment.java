@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -24,20 +25,29 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 
 public class CheckoutFragment extends Fragment implements LocationListener  {
@@ -48,8 +58,10 @@ public class CheckoutFragment extends Fragment implements LocationListener  {
     private RecyclerView recyclerView;
     private List<DataCart> dataCartList;
     private TextView totalHarga;
+    private Button btnCheckout;
 
-    private DatabaseReference databaseReference;
+    private String userUID;
+    private DatabaseReference databaseReference, databaseReference1;
 
     private CheckoutAdapter adapter;
     private int total = 0;
@@ -72,11 +84,23 @@ public class CheckoutFragment extends Fragment implements LocationListener  {
 //        Maps = view.findViewById(R.id.locationButton);
 //        etLocation = view.findViewById(R.id.search_cart);
         totalHarga = view.findViewById(R.id.totalharga);
+        btnCheckout = view.findViewById(R.id.button_checkout);
         recyclerView = view.findViewById(R.id.view_cart);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        userUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        databaseReference = FirebaseDatabase.getInstance().getReference("cart");
+        databaseReference1 = FirebaseDatabase.getInstance().getReference("transaction");
+
         dataCartList = new ArrayList<>();
+
+        btnCheckout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkoutMenu();
+            }
+        });
 
 //        Maps.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -92,12 +116,51 @@ public class CheckoutFragment extends Fragment implements LocationListener  {
 //        });
     }
 
+    private void checkoutMenu() {
+        databaseReference.orderByChild("idCustomer").equalTo(userUID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int i = 1;
+                String idTransaksi = String.valueOf(System.currentTimeMillis());
+                Map<String, String> trans = new HashMap<>();
+                trans.put("idTransaksi", idTransaksi);
+                trans.put("idCustomer",userUID);
+                for (DataSnapshot item : snapshot.getChildren()) {
+                    DataCart dataCart = item.getValue(DataCart.class);
+                    trans.put("idCart"+i,dataCart.getIdCart());
+                    i++;
+                }
+                trans.put("totalHarga",String.valueOf(total));
+                trans.put("paymentStatus", "Unverified");
+                trans.put("deliverStatus", "Shipping");
+                trans.put("buktiPembayaran", " ");
+
+                Intent intent = new Intent(getContext(), PaymentPage.class);
+                intent.putExtra("idTransaksi", idTransaksi);
+                intent.putExtra("hashmap", (Serializable) trans);
+                intent.putExtra("totalHarga", total);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        String idTransaksi = String.valueOf(System.currentTimeMillis());
+        Intent intent = new Intent(getContext(), PaymentPage.class);
+        intent.putExtra("idTransaksi", idTransaksi);
+        intent.putExtra("total", total);
+        startActivity(intent);
+    }
+
     private void showAllCart() {
-        databaseReference = FirebaseDatabase.getInstance().getReference("cart");
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference.orderByChild("idCustomer").equalTo(userUID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot item : snapshot.getChildren()) {
+
                     DataCart dataCart = item.getValue(DataCart.class);
                     dataCartList.add(dataCart);
                     total = total + Integer.parseInt(dataCart.getHargaMenu());
@@ -108,9 +171,10 @@ public class CheckoutFragment extends Fragment implements LocationListener  {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+
             }
         });
+
     }
 
     @SuppressLint("MissingPermission")
@@ -158,10 +222,5 @@ public class CheckoutFragment extends Fragment implements LocationListener  {
     public void onResume() {
         super.onResume();
         showAllCart();
-        getTotalHarga();
-    }
-
-    private void getTotalHarga() {
-
     }
 }
