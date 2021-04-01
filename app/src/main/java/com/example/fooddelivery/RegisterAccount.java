@@ -44,7 +44,7 @@ public class RegisterAccount extends AppCompatActivity {
         etFullname = findViewById(R.id.nama);
         etPassword = findViewById(R.id.password);
         etPhoneNumber = findViewById(R.id.nomorhp);
-        ToLoginPage = findViewById(R.id.tologinpage);
+        ToLoginPage = findViewById(R.id.namaUser);
 
         firebaseDatabase = FirebaseDatabase.getInstance().getReference("Users");
 

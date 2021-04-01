@@ -23,12 +23,11 @@
             android:id="@+id/photo"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:background="@drawable/ic_baseline_account_circle_24"
             android:layout_below="@id/bar"
             android:layout_marginTop="50dp"
             android:layout_centerHorizontal="true" />
         <TextView
-            android:id="@+id/tologinpage"
+            android:id="@+id/namaUser"
             android:layout_below="@id/photo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -38,7 +37,7 @@
         <Button
             android:layout_marginTop="60dp"
             android:id="@+id/button_update"
-            android:layout_below="@id/tologinpage"
+            android:layout_below="@id/namaUser"
             android:layout_width="match_parent"
             android:text="Update Account"
             android:layout_height="wrap_content"/>

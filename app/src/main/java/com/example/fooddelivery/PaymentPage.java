@@ -84,19 +84,19 @@ public class PaymentPage extends AppCompatActivity {
         btnUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                uploadBukti();
+                uploadBukti();
             }
         });
 
         btnBayar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bayarCheckout();
-//                if(buktiPembayaran.getDrawable() != null) {
-//
-//                } else {
-//                    Toast.makeText(PaymentPage.this, "Silahkan Upload Bukti Pembayaran, Terima Kasih", Toast.LENGTH_SHORT).show();
-//                }
+
+                if(buktiPembayaran.getDrawable() != null) {
+                    bayarCheckout();
+                } else {
+                    Toast.makeText(PaymentPage.this, "Silahkan Upload Bukti Pembayaran, Terima Kasih", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -116,7 +116,7 @@ public class PaymentPage extends AppCompatActivity {
                 trans.put("totalHarga",String.valueOf(total));
                 trans.put("paymentStatus", "Unverified");
                 trans.put("deliverStatus", "Shipping");
-                nextmovemove();
+                nextmove();
             }
 
             @Override
@@ -127,19 +127,19 @@ public class PaymentPage extends AppCompatActivity {
     }
 
     private void nextmove() {
-//        nextmovemove();
-//        StorageReference fileReference = storageReference.child(System.currentTimeMillis() + "." + getExtensionImage(uri));
-//        fileReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//            @RequiresApi(api = Build.VERSION_CODES.N)
-//            @Override
-//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-//                while (!uriTask.isSuccessful());
-//                Uri downloadedUri = uriTask.getResult();
-//                trans.put("buktiPembayaran", downloadedUri.toString());
-//
-//            }
-//        });
+
+        StorageReference fileReference = storageReference.child(System.currentTimeMillis() + "." + getExtensionImage(uri));
+        fileReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                while (!uriTask.isSuccessful());
+                Uri downloadedUri = uriTask.getResult();
+                trans.put("buktiPembayaran", downloadedUri.toString());
+                nextmovemove();
+            }
+        });
     }
 
     private void nextmovemove() {
@@ -167,7 +167,6 @@ public class PaymentPage extends AppCompatActivity {
                             });
                         }
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 
@@ -175,49 +174,36 @@ public class PaymentPage extends AppCompatActivity {
                 });
             }
 
-//    private void uploadBukti() {
-//        openFile();
-//    }
-//
-//    private void openFile() {
-//        Intent intent = new Intent();
-//        intent.setAction(Intent.ACTION_GET_CONTENT);
-//        intent.setType("image/*");
-//        startActivityForResult(intent, KITKAT_VALUE);
-//
-//
-//    }
-//
-//    private String getExtensionImage(Uri uri) {
-//        ContentResolver Cr = getContentResolver();
-//        MimeTypeMap mime = MimeTypeMap.getSingleton();
-//        return mime.getExtensionFromMimeType(Cr.getType(uri));
-//    }
-//
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        if(requestCode == KITKAT_VALUE && resultCode == RESULT_OK && data != null && data.getData() != null) {
-//            uri = null;
-//            if (Build.VERSION.SDK_INT < 19) {
-//                uri = data.getData();
-//            } else {
-//                uri = data.getData();
-//                final int takeFlags = data.getFlags()
-//                        & (Intent.FLAG_GRANT_READ_URI_PERMISSION
-//                        | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-//                try {
-//                    getContentResolver().takePersistableUriPermission(uri, takeFlags);
-//                } catch (SecurityException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
-//        Picasso.with(this).load(uri).into(buktiPembayaran);
-//    }
-
-
         });
+    }
+
+    private void uploadBukti() {
+        openFile();
+    }
+
+    private void openFile() {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        startActivityForResult(intent, KITKAT_VALUE);
+
+
+    }
+
+    private String getExtensionImage(Uri uri) {
+        ContentResolver Cr = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(Cr.getType(uri));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == KITKAT_VALUE && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            uri = data.getData();
+        }
+
+        Picasso.with(this).load(uri).into(buktiPembayaran);
     }
 }

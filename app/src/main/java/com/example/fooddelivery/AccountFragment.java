@@ -11,9 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,6 +30,8 @@ private DatabaseReference databaseReference;
 private FirebaseAuth firebaseAuth;
 
 private String userUID;
+private ImageView photo;
+private TextView nama;
 
 
     @Override
@@ -45,10 +48,14 @@ private String userUID;
         history = view.findViewById(R.id.button_history);
         aboutUs = view.findViewById(R.id.aboutUs);
         logout = view.findViewById(R.id.button_logout);
+        photo = view.findViewById(R.id.photo);
+        nama = view.findViewById(R.id.namaUser);
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Users");
         firebaseAuth = FirebaseAuth.getInstance();
         userUID = firebaseAuth.getUid();
+
+        getDataUser();
 
         update.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +102,25 @@ private String userUID;
                 firebaseAuth.signOut();
                 Intent intent = new Intent(getContext(), MultiPage.class);
                 startActivity(intent);
+            }
+        });
+    }
+
+    private void getDataUser() {
+        databaseReference.orderByChild("idUser").equalTo(userUID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot item : snapshot.getChildren()) {
+                    DataUser dataUser = item.getValue(DataUser.class);
+                    nama.setText(dataUser.getFullname());
+                    Picasso.with(getContext()).load(dataUser.getProfileImage()).into(photo);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }
