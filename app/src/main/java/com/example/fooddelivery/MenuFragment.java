@@ -52,6 +52,8 @@ public class MenuFragment extends Fragment {
     private TextView addmenu;
     private FrameLayout layout;
 
+    private String kategori;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -71,6 +73,8 @@ public class MenuFragment extends Fragment {
         catDesert = view.findViewById(R.id.Kategori_Desert);
         addmenu = view.findViewById(R.id.addData);
         layout = view.findViewById(R.id.home1);
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("data-barang");
 
         imgSearch = view.findViewById(R.id.iconsearch);
         imgSearch.setOnClickListener(new View.OnClickListener() {
@@ -109,6 +113,49 @@ public class MenuFragment extends Fragment {
 
         showAllMenu();
 
+        catMakanan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                kategori = "Makanan";
+                cariKategori(kategori);
+            }
+        });
+
+        catMinuman.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                kategori = "Minuman";
+                cariKategori(kategori);
+            }
+        });
+
+        catDesert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                kategori = "Desert";
+                cariKategori(kategori);
+            }
+        });
+
+    }
+
+    private void cariKategori(String kategori) {
+        menuList.clear();
+        databaseReference.orderByChild("kategori").equalTo(kategori).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot item : snapshot.getChildren()) {
+                    DataMenu dataMenu = item.getValue(DataMenu.class);
+                    menuList.add(dataMenu);
+                }
+                viewMenu(menuList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     @Override
@@ -119,7 +166,6 @@ public class MenuFragment extends Fragment {
     }
 
     private void showAllMenu() {
-        databaseReference = FirebaseDatabase.getInstance().getReference("data-barang");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
