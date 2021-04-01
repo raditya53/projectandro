@@ -107,6 +107,8 @@ public class MenuFragment extends Fragment {
 
         menuList = new ArrayList<>();
 
+        showAllMenu();
+
     }
 
     @Override

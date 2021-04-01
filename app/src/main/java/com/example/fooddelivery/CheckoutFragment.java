@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -46,10 +47,12 @@ public class CheckoutFragment extends Fragment implements LocationListener  {
     private LocationManager locationManager;
     private RecyclerView recyclerView;
     private List<DataCart> dataCartList;
+    private TextView totalHarga;
 
     private DatabaseReference databaseReference;
 
     private CheckoutAdapter adapter;
+    private int total = 0;
 
     public CheckoutFragment() {
         // Required empty public constructor
@@ -68,6 +71,7 @@ public class CheckoutFragment extends Fragment implements LocationListener  {
         super.onViewCreated(view, savedInstanceState);
 //        Maps = view.findViewById(R.id.locationButton);
 //        etLocation = view.findViewById(R.id.search_cart);
+        totalHarga = view.findViewById(R.id.totalharga);
         recyclerView = view.findViewById(R.id.view_cart);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -96,8 +100,9 @@ public class CheckoutFragment extends Fragment implements LocationListener  {
                 for (DataSnapshot item : snapshot.getChildren()) {
                     DataCart dataCart = item.getValue(DataCart.class);
                     dataCartList.add(dataCart);
-
+                    total = total + Integer.parseInt(dataCart.getHargaMenu());
                 }
+                totalHarga.setText(String.valueOf(total));
                 adapter = new CheckoutAdapter(getContext(), dataCartList);
                 recyclerView.setAdapter(adapter);
             }
@@ -153,5 +158,10 @@ public class CheckoutFragment extends Fragment implements LocationListener  {
     public void onResume() {
         super.onResume();
         showAllCart();
+        getTotalHarga();
+    }
+
+    private void getTotalHarga() {
+
     }
 }
