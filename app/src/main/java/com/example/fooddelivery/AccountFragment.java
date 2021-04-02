@@ -12,9 +12,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
+
 
 public class AccountFragment extends Fragment {
 private Button update, logout,aboutUs, history;
+
+private DatabaseReference databaseReference;
+private FirebaseAuth firebaseAuth;
+
+private String userUID;
 
 
     @Override
@@ -32,11 +46,33 @@ private Button update, logout,aboutUs, history;
         aboutUs = view.findViewById(R.id.aboutUs);
         logout = view.findViewById(R.id.button_logout);
 
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+        firebaseAuth = FirebaseAuth.getInstance();
+        userUID = firebaseAuth.getUid();
+
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), UpdateAccount.class);
-                startActivity(intent);
+                databaseReference.orderByChild("idUser").equalTo(userUID).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for(DataSnapshot data : snapshot.getChildren()) {
+                            DataUser dataUser = data.getValue(DataUser.class);
+                            Intent intent = new Intent(getContext(), UpdateAccount.class);
+                            intent.putExtra("nama", dataUser.getFullname());
+                            intent.putExtra("email", dataUser.getEmail());
+                            intent.putExtra("password", dataUser.getPassword());
+                            intent.putExtra("phone", dataUser.getPhoneNumber());
+                            intent.putExtra("url", dataUser.getProfileImage());
+                            startActivity(intent);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         });
         history.setOnClickListener(new View.OnClickListener() {
@@ -56,6 +92,7 @@ private Button update, logout,aboutUs, history;
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                firebaseAuth.signOut();
                 Intent intent = new Intent(getContext(), MultiPage.class);
                 startActivity(intent);
             }

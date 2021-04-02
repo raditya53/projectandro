@@ -1,18 +1,28 @@
 package com.example.fooddelivery;
 
-public class DataCart {
-    private String idCart,idMenu, idCustomer, NamaMenu, QuantityMenu ,HargaMenu;
+public class DataHistory {
+    private String idHistory,idCart,idMenu, idCustomer, NamaMenu, QuantityMenu ,HargaMenu, TotalHarga;
 
-    public DataCart(String idCart, String idMenu, String idCustomer, String namaMenu, String quantityMenu, String hargaMenu) {
+    public DataHistory() {
+    }
+
+    public DataHistory(String idHistory, String idCart, String idMenu, String idCustomer, String namaMenu, String quantityMenu, String hargaMenu, String totalHarga) {
+        this.idHistory = idHistory;
         this.idCart = idCart;
         this.idMenu = idMenu;
         this.idCustomer = idCustomer;
-        this.NamaMenu = namaMenu;
-        this.QuantityMenu = quantityMenu;
-        this.HargaMenu = hargaMenu;
+        NamaMenu = namaMenu;
+        QuantityMenu = quantityMenu;
+        HargaMenu = hargaMenu;
+        TotalHarga = totalHarga;
     }
 
-    public DataCart() {
+    public String getIdHistory() {
+        return idHistory;
+    }
+
+    public void setIdHistory(String idHistory) {
+        this.idHistory = idHistory;
     }
 
     public String getIdCart() {
@@ -61,5 +71,13 @@ public class DataCart {
 
     public void setHargaMenu(String hargaMenu) {
         HargaMenu = hargaMenu;
+    }
+
+    public String getTotalHarga() {
+        return TotalHarga;
+    }
+
+    public void setTotalHarga(String totalHarga) {
+        TotalHarga = totalHarga;
     }
 }

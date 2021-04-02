@@ -73,7 +73,9 @@ public class LoginPage extends AppCompatActivity {
         if(etEmail.getText().toString().isEmpty()) {
             etEmail.setError("Email is required!");
             etEmail.requestFocus();
-        } else if(!Patterns.EMAIL_ADDRESS.matcher(etEmail.getText().toString()).matches()) {
+        }
+
+        if(!Patterns.EMAIL_ADDRESS.matcher(etEmail.getText().toString()).matches()) {
             etEmail.setError("Please Provide Valid Email!");
             etEmail.requestFocus();
         }

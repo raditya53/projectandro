@@ -7,6 +7,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class SplashScreen extends AppCompatActivity {
 
     int waktu = 2000;
@@ -17,9 +20,18 @@ public class SplashScreen extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent home = new Intent(SplashScreen.this, MultiPage.class);
-                startActivity(home);
-                finish();
+                FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
+                if(firebaseUser != null) {
+                    Intent intent = new Intent(SplashScreen.this, NavigasiTab.class);
+                    startActivity(intent);
+                } else {
+                    Intent home = new Intent(SplashScreen.this, LocationPage.class);
+                    startActivity(home);
+                    finish();
+                }
+
             }
         }, waktu);
     }

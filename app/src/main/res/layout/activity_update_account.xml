@@ -24,22 +24,29 @@
             android:text="Update Account"
             android:textColor="@color/white"/>
     </androidx.appcompat.widget.Toolbar>
-
-    <ImageView
-        android:id="@+id/photo"
+    <androidx.cardview.widget.CardView
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:background="@drawable/ic_baseline_account_circle_24"
-        android:layout_below="@id/toolbar"
-        android:layout_marginTop="50dp"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        app:cardCornerRadius="100dp"
+        android:id="@id/container"
+        android:layout_below="@id/toolbar">
+        <ImageView
+            android:id="@+id/photo"
+            android:scaleType="fitXY"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true" />
+    </androidx.cardview.widget.CardView>
     <EditText
         android:drawableLeft="@drawable/custom_email"
         android:drawablePadding="12dp"
         android:background="@drawable/custom_input"
         android:paddingStart="12dp"
         android:paddingEnd="12dp"
-        android:layout_below="@id/photo"
+        android:layout_below="@id/container"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:hint="email"

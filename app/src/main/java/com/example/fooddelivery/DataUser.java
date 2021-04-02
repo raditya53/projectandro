@@ -1,14 +1,15 @@
 package com.example.fooddelivery;
 
 public class DataUser {
-    private String IdUser, Fullname, Email, Password, PhoneNumber;
+    private String IdUser, Fullname, Email, Password, PhoneNumber, profileImage;
 
-    public DataUser(String idUser, String fullname, String email, String password, String phoneNumber) {
+    public DataUser(String idUser, String fullname, String email, String password, String phoneNumber, String profileImg) {
         IdUser = idUser;
         Fullname = fullname;
         Email = email;
         Password = password;
         PhoneNumber = phoneNumber;
+        profileImage = profileImg;
     }
 
     public DataUser() {
@@ -52,5 +53,13 @@ public class DataUser {
 
     public void setPhoneNumber(String phoneNumber) {
         PhoneNumber = phoneNumber;
+    }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 }
