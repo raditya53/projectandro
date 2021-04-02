@@ -27,7 +27,6 @@
             android:name=".AddMenu"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
-        <activity android:name=".LocationPage"/>
         <activity
             android:name=".NavigasiTab"
             android:configChanges="orientation"
@@ -58,6 +57,7 @@
             android:screenOrientation="portrait" />
         <activity android:name=".Activity_History" />
         <activity android:name=".ForgotPassword" />
+        <activity android:name=".LocationPage"/>
     </application>
 
 </manifest>
