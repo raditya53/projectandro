@@ -24,26 +24,23 @@ import java.util.Locale;
 
 public class LocationPage extends Activity implements LocationListener{
     private LocationManager locationManager;
+    private final int LOCATION_REQUEST_CODE = 1001;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(ContextCompat.checkSelfPermission(LocationPage.this, Manifest.permission.ACCESS_FINE_LOCATION
         )!= PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(LocationPage.this, new String[] {
-                    Manifest.permission.ACCESS_FINE_LOCATION
-            },100);
+           askLocationPermission();
+        } else {
+            getCurrentLocation();
         }
-        getCurrentLocation();
-        Intent intent = new Intent(LocationPage.this, MultiPage.class);
-        startActivity(intent);
-            }
+    }
 
     @SuppressLint("MissingPermission")
     private void getCurrentLocation() {
         try {
             locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, LocationPage.this);
-
         } catch (Exception e) {
             Toast.makeText(LocationPage.this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
@@ -56,31 +53,40 @@ public class LocationPage extends Activity implements LocationListener{
             Geocoder geocoder = new Geocoder(LocationPage.this, Locale.getDefault());
             List<Address> addressList = geocoder.getFromLocation(location.getLatitude(),location.getLongitude(), 1);
             String address = addressList.get(0).getAddressLine(0);
-//            etLocation.setText(address);
-
+            Intent intent = new Intent(LocationPage.this, NavigasiTab.class);
+            intent.putExtra("address", address);
+            startActivity(intent);
+            finish();
         } catch (Exception e) {
             Toast.makeText(LocationPage.this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
+    private void askLocationPermission() {
+        if (ContextCompat.checkSelfPermission(LocationPage.this, Manifest.permission.ACCESS_FINE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                ActivityCompat.requestPermissions(this, new String[]{
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                }, LOCATION_REQUEST_CODE);
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                }, LOCATION_REQUEST_CODE);
+            }
+        }
     }
 
     @Override
-    public void onProviderEnabled(@NonNull String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(@NonNull String provider) {
-
-    }
-
-    @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
-
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == LOCATION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getCurrentLocation();
+            } else {
+                Toast.makeText(this, "Please Grant Permission", Toast.LENGTH_SHORT).show();
+                askLocationPermission();
+            }
+        }
     }
 }
 

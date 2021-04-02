@@ -25,6 +25,8 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -41,13 +43,14 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.core.Tag;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
 public class MenuFragment extends Fragment {
 
     private EditText etSearch;
-    private ImageButton catMakanan,catMinuman,catDesert;
+    private ImageButton catMakanan,catMinuman,catDesert,catAll;
     private RecyclerView recyclerView;
     private DatabaseReference databaseReference;
     private List<DataMenu> menuList;
@@ -56,6 +59,7 @@ public class MenuFragment extends Fragment {
     private TextView addmenu;
     private FrameLayout layout;
     private boolean aBoolean;
+    private String kategori = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,8 +77,43 @@ public class MenuFragment extends Fragment {
         catMakanan = view.findViewById(R.id.Kategori_Makanan);
         catMinuman = view.findViewById(R.id.Kategori_Minuman);
         catDesert = view.findViewById(R.id.Kategori_Desert);
+        catAll = view.findViewById(R.id.Kategori_All);
         addmenu = view.findViewById(R.id.addData);
         layout = view.findViewById(R.id.home1);
+
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("data-barang");
+        catAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            showAllMenu();
+            }
+        });
+
+        catDesert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                kategori = "Desert";
+                searchKategori(kategori);
+            }
+        });
+
+        catMinuman.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                kategori = "Minuman";
+                searchKategori(kategori);
+            }
+        });
+
+        catMakanan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                kategori = "Makanan";
+                searchKategori(kategori);
+            }
+        });
+
 
 // JANGAN DIHAPUS BUAT GALIH WKWKWK
 //        imgSearch = view.findViewById(R.id.iconsearch);
@@ -111,7 +150,6 @@ public class MenuFragment extends Fragment {
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
         menuList = new ArrayList<>();
-
         showAllMenu();
 
     }
@@ -121,11 +159,47 @@ public class MenuFragment extends Fragment {
     public void onResume() {
         super.onResume();
         menuList.clear();
-        showAllMenu();
+
     }
 
+//    private void SearchMenu(String search){
+//        menuList.clear();
+//        databaseReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                for(DataSnapshot item : snapshot.getChildren()) {
+//                    DataMenu dataMenu = item.getValue(DataMenu.class);
+//                    if(dataMenu.getNama().toLowerCase().contains(search.toLowerCase())) {
+//                        menuList.add(dataMenu);
+//                    }
+//                }
+//                viewMenu(menuList);
+//            }
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//    }
+
+    private void searchKategori(String kategori) {
+        databaseReference.orderByChild("kategori").equalTo(kategori).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot item : snapshot.getChildren()) {
+                    DataMenu dataMenu = item.getValue(DataMenu.class);
+                    menuList.add(dataMenu);
+                }
+                viewMenu(menuList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
     private void showAllMenu() {
-        databaseReference = FirebaseDatabase.getInstance().getReference("data-barang");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -165,6 +239,7 @@ public class MenuFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText);
                 return false;
             }
         });

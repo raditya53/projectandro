@@ -24,8 +24,9 @@ public class SplashScreen extends AppCompatActivity {
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
                 if(firebaseUser != null) {
-                    Intent intent = new Intent(SplashScreen.this, NavigasiTab.class);
+                    Intent intent = new Intent(SplashScreen.this, LocationPage.class);
                     startActivity(intent);
+                    finish();
                 } else {
                     Intent home = new Intent(SplashScreen.this, LocationPage.class);
                     startActivity(home);

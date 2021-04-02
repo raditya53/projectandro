@@ -57,7 +57,7 @@ public class CheckoutFragment extends Fragment implements LocationListener  {
     private LocationManager locationManager;
     private RecyclerView recyclerView;
     private List<DataCart> dataCartList;
-    private TextView totalHarga;
+    private TextView totalHarga,location;
     private Button btnCheckout;
 
     private String userUID;
@@ -86,8 +86,12 @@ public class CheckoutFragment extends Fragment implements LocationListener  {
         totalHarga = view.findViewById(R.id.totalharga);
         btnCheckout = view.findViewById(R.id.button_checkout);
         recyclerView = view.findViewById(R.id.view_cart);
+        location = view.findViewById(R.id.location);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        Intent intent = getActivity().getIntent();
+        location.setText(intent.getStringExtra("address"));
 
         userUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference("cart");
@@ -102,18 +106,6 @@ public class CheckoutFragment extends Fragment implements LocationListener  {
             }
         });
 
-//        Maps.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION
-//                )!= PackageManager.PERMISSION_GRANTED) {
-//                    ActivityCompat.requestPermissions(getActivity(), new String[] {
-//                            Manifest.permission.ACCESS_FINE_LOCATION
-//                    },100);
-//                }
-//                getCurrentLocation();
-//            }
-//        });
     }
 
     private void checkoutMenu() {

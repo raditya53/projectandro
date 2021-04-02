@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,9 +17,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuHolder> {
+public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuHolder> implements Filterable {
 
     private Context ctx;
     private List<DataMenu> dataMenuList;
@@ -26,6 +30,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuHolder> {
         this.ctx = ctx;
         this.dataMenuList = dataMenuList;
     }
+
 
     public class MenuHolder extends RecyclerView.ViewHolder {
 
@@ -72,4 +77,37 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuHolder> {
     public int getItemCount() {
         return dataMenuList.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return filter;
+    }
+
+    Filter filter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<DataMenu> databaru = new ArrayList<>();
+            if(constraint.toString().length() == 0 || constraint.toString().isEmpty()) {
+                databaru.addAll(dataMenuList);
+            } else {
+                for(DataMenu item : dataMenuList) {
+                    if(item.getNama().toLowerCase().contains(constraint.toString().toLowerCase())) {
+                        databaru.add(item);
+                    }
+                }
+            }
+
+            FilterResults filterResults = new FilterResults();
+            filterResults.values = databaru;
+            return filterResults;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            dataMenuList.clear();
+            dataMenuList.addAll((Collection<? extends DataMenu>) results.values);
+            notifyDataSetChanged();
+        }
+    };
+
 }
