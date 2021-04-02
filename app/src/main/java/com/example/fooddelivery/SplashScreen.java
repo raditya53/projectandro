@@ -27,7 +27,7 @@ public class SplashScreen extends AppCompatActivity {
                     Intent intent = new Intent(SplashScreen.this, NavigasiTab.class);
                     startActivity(intent);
                 } else {
-                    Intent home = new Intent(SplashScreen.this, MultiPage.class);
+                    Intent home = new Intent(SplashScreen.this, LocationPage.class);
                     startActivity(home);
                     finish();
                 }
