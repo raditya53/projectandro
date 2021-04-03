@@ -92,7 +92,7 @@ public class LoginPage extends AppCompatActivity {
                         if(task.isSuccessful()) {
                             FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                             if(firebaseUser.isEmailVerified()) {
-                                Intent intent = new Intent(LoginPage.this, NavigasiTab.class);
+                                Intent intent = new Intent(LoginPage.this, LocationPage.class);
                                 startActivity(intent);
                             } else {
                                 AlertDialog builder = new AlertDialog.Builder(LoginPage.this)

@@ -1,6 +1,7 @@
 package com.example.fooddelivery;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,6 @@ public class CheckoutAdapter extends RecyclerView.Adapter<CheckoutAdapter.CartHo
             super(itemView);
 
             tvNama = itemView.findViewById(R.id.txtNama);
-            tvEdit = itemView.findViewById(R.id.EditTxt);
             tvQuantity = itemView.findViewById(R.id.txtQuantity);
             tvHarga = itemView.findViewById(R.id.txtHarga);
 
@@ -49,13 +49,6 @@ public class CheckoutAdapter extends RecyclerView.Adapter<CheckoutAdapter.CartHo
         holder.tvHarga.setText(dataCart.getHargaMenu());
         holder.tvQuantity.setText(dataCart.getQuantityMenu());
         holder.tvNama.setText(dataCart.getNamaMenu());
-
-        holder.tvEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
     }
 
     @Override

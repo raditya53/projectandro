@@ -11,6 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -30,6 +33,9 @@ private FirebaseAuth firebaseAuth;
 
 private String userUID;
 
+private ImageView photo;
+private TextView nama;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,10 +51,14 @@ private String userUID;
         history = view.findViewById(R.id.button_history);
         aboutUs = view.findViewById(R.id.aboutUs);
         logout = view.findViewById(R.id.button_logout);
+        photo = view.findViewById(R.id.photo);
+        nama = view.findViewById(R.id.accountName);
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Users");
         firebaseAuth = FirebaseAuth.getInstance();
         userUID = firebaseAuth.getUid();
+
+        getUserData();
 
         update.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,15 +88,17 @@ private String userUID;
         history.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), Activity_History.class);
-                startActivity(intent);
+                Toast.makeText(getContext(), "Under Development, Thanks!", Toast.LENGTH_SHORT).show();
+//                Intent intent = new Intent(getContext(), Activity_History.class);
+//                startActivity(intent);
             }
         });
         aboutUs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), About_us.class);
-                startActivity(intent);
+                Toast.makeText(getContext(), "Under Development, Thanks!", Toast.LENGTH_SHORT).show();
+//                Intent intent = new Intent(getContext(), About_us.class);
+//                startActivity(intent);
             }
         });
         logout.setOnClickListener(new View.OnClickListener() {
@@ -95,6 +107,25 @@ private String userUID;
                 firebaseAuth.signOut();
                 Intent intent = new Intent(getContext(), MultiPage.class);
                 startActivity(intent);
+            }
+        });
+    }
+
+    private void getUserData() {
+        databaseReference.orderByChild("idUser").equalTo(userUID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot item : snapshot.getChildren()) {
+                    DataUser dataUser = item.getValue(DataUser.class);
+                    nama.setText(dataUser.getFullname());
+                    Picasso.with(getContext()).load(dataUser.getProfileImage()).into(photo);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }
