@@ -89,10 +89,12 @@ public class CheckoutFragment extends Fragment  {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+
 //        Intent intent = getActivity().getIntent();
 //        location.setText(intent.getStringExtra("address"));
         
         locationload();
+
 
         userUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference("cart");
@@ -112,6 +114,7 @@ public class CheckoutFragment extends Fragment  {
         LocationPage locationPage = new LocationPage();
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(locationPage.SHARED_PREFS, Context.MODE_PRIVATE);
         location.setText(sharedPreferences.getString(locationPage.SHARED_LOCATION,""));
+
     }
 
     private void checkoutMenu() {

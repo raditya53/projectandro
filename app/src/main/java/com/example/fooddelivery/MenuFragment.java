@@ -147,6 +147,40 @@ public class MenuFragment extends Fragment implements SearchView.OnQueryTextList
         });
 
 
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("data-barang");
+        catAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            showAllMenu();
+            }
+        });
+
+        catDesert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                kategori = "Desert";
+                searchKategori(kategori);
+            }
+        });
+
+        catMinuman.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                kategori = "Minuman";
+                searchKategori(kategori);
+            }
+        });
+
+        catMakanan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                kategori = "Makanan";
+                searchKategori(kategori);
+            }
+        });
+
+
 // JANGAN DIHAPUS BUAT GALIH WKWKWK
 //        imgSearch = view.findViewById(R.id.iconsearch);
 //        imgSearch.setOnClickListener(new View.OnClickListener() {
@@ -207,7 +241,7 @@ public class MenuFragment extends Fragment implements SearchView.OnQueryTextList
     public void onResume() {
         super.onResume();
         menuList.clear();
-        showAllMenu();
+
     }
 
     private void SearchMenu(String search){
