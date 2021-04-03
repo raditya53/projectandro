@@ -40,17 +40,18 @@ public class PaymentPage extends AppCompatActivity {
     private TextView idTransaksi, totalHarga;
     private Button btnUpload , btnBayar;
     private ImageView buktiPembayaran;
+    public static final int KITKAT_VALUE = 1002;
 
     private static final int PICK_IMAGE_REQUEST = 1;
     private Uri uri;
 
-    private FirebaseDatabase databaseReference1;
+    private DatabaseReference databaseReference,databaseReference1,databaseReference2;
     private StorageReference storageReference;
 
-    private String userUID, idTransaction;
+    private String userUID, idTransaction, location;
     private int total = 0;
 
-    private HashMap<String, String> hashMap;
+    private HashMap<String, String> trans = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,14 +65,16 @@ public class PaymentPage extends AppCompatActivity {
         btnUpload = findViewById(R.id.btnUploadPayment);
 
         userUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        databaseReference1 = FirebaseDatabase.getInstance();
+        databaseReference = FirebaseDatabase.getInstance().getReference("cart");
+        databaseReference1 = FirebaseDatabase.getInstance().getReference("transaction");
+        databaseReference2 = FirebaseDatabase.getInstance().getReference("history");
+
         storageReference = FirebaseStorage.getInstance().getReference("payment");
 
         Intent intent = getIntent();
-        Map<String, String> trans = new HashMap<>();
         idTransaction = intent.getStringExtra("idTransaksi");
         total = intent.getIntExtra("totalHarga",0);
-        hashMap = (HashMap<String, String>) intent.getSerializableExtra("hashmap");
+        location = intent.getStringExtra("location");
 
         idTransaksi.setText(idTransaction);
         totalHarga.setText(String.valueOf(total));
@@ -96,6 +99,32 @@ public class PaymentPage extends AppCompatActivity {
     }
 
     private void bayarCheckout() {
+        databaseReference.orderByChild("idCustomer").equalTo(userUID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int i = 1;
+                trans.put("idTransaksi", idTransaction);
+                trans.put("idCustomer",userUID);
+                for (DataSnapshot item : snapshot.getChildren()) {
+                    DataCart dataCart = item.getValue(DataCart.class);
+                    trans.put("idCart"+i,dataCart.getIdCart());
+                    i++;
+                }
+                trans.put("totalHarga",String.valueOf(total));
+                trans.put("paymentStatus", "Unverified");
+                trans.put("deliverStatus", "Shipping");
+                trans.put("Location", location);
+                nextmove();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void nextmove() {
         StorageReference fileReference = storageReference.child(System.currentTimeMillis() + "." + getExtensionImage(uri));
         fileReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -104,60 +133,47 @@ public class PaymentPage extends AppCompatActivity {
                 Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
                 while (!uriTask.isSuccessful());
                 Uri downloadedUri = uriTask.getResult();
-                hashMap.replace("buktiPembayaran", downloadedUri.toString());
-                databaseReference1.getReference("transaction").child(idTransaction).setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()) {
-                            databaseReference1.getReference("cart").orderByChild("idCustomer").equalTo(userUID).addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    for(DataSnapshot item : snapshot.getChildren()){
-                                        HashMap<String , Object> hashMap = (HashMap<String, Object>) item.getValue();
-                                        databaseReference1.getReference("history").child(hashMap.get("idCart").toString()).setValue(hashMap)
-                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                    @Override
-                                                    public void onSuccess(Void aVoid) {
-                                                        databaseReference1.getReference("cart").child(hashMap.get("idCart").toString()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                            @Override
-                                                            public void onSuccess(Void aVoid) {
-                                                                Toast.makeText(PaymentPage.this, "Payment Success", Toast.LENGTH_LONG).show();
-                                                                startActivity(new Intent(PaymentPage.this, NavigasiTab.class));
-                                                            }
-                                                        }).addOnFailureListener(new OnFailureListener() {
-                                                            @Override
-                                                            public void onFailure(@NonNull Exception e) {
-                                                                Toast.makeText(PaymentPage.this, "Payment Success", Toast.LENGTH_LONG).show();
-                                                            }
-                                                        });
-                                                    }
-                                                }).addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Toast.makeText(PaymentPage.this, "All Checkout Fail", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                                    }
-                                }
+                trans.put("buktiPembayaran", downloadedUri.toString());
+                nextmovemove();
+            }
+        });
+    }
 
+    private void nextmovemove() {
+        databaseReference1.child(idTransaction).setValue(trans).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                databaseReference.orderByChild("idCustomer").equalTo(userUID).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot item : snapshot.getChildren()) {
+                            HashMap<String, Object> newHashMap = (HashMap<String, Object>) item.getValue();
+                            databaseReference2.child(newHashMap.get("idCart").toString()).setValue(newHashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
+                                public void onSuccess(Void aVoid) {
+                                    databaseReference.child(newHashMap.get("idCart").toString()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Toast.makeText(PaymentPage.this, "Payment Berhasil", Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(PaymentPage.this, NavigasiTab.class));
+                                            finish();
+                                        }
+                                    });
 
                                 }
                             });
                         }
                     }
-                }).addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(PaymentPage.this, "Gagal Bayar", Toast.LENGTH_SHORT).show();
+                    public void onCancelled(@NonNull DatabaseError error) {
+
                     }
                 });
-
             }
-        });
 
+        });
     }
+
 
     private void uploadBukti() {
         openFile();

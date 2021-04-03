@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -50,11 +51,8 @@ import java.util.Locale;
 import java.util.Map;
 
 
-public class CheckoutFragment extends Fragment implements LocationListener  {
+public class CheckoutFragment extends Fragment  {
 
-    private ImageButton Maps;
-    private EditText etLocation;
-    private LocationManager locationManager;
     private RecyclerView recyclerView;
     private List<DataCart> dataCartList;
     private TextView totalHarga,location;
@@ -65,6 +63,7 @@ public class CheckoutFragment extends Fragment implements LocationListener  {
 
     private CheckoutAdapter adapter;
     private int total = 0;
+    private ValueEventListener listener;
 
     public CheckoutFragment() {
         // Required empty public constructor
@@ -90,12 +89,15 @@ public class CheckoutFragment extends Fragment implements LocationListener  {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        Intent intent = getActivity().getIntent();
-        location.setText(intent.getStringExtra("address"));
+
+//        Intent intent = getActivity().getIntent();
+//        location.setText(intent.getStringExtra("address"));
+        
+        locationload();
+
 
         userUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference("cart");
-        databaseReference1 = FirebaseDatabase.getInstance().getReference("transaction");
 
         dataCartList = new ArrayList<>();
 
@@ -108,28 +110,21 @@ public class CheckoutFragment extends Fragment implements LocationListener  {
 
     }
 
+    private void locationload() {
+        LocationPage locationPage = new LocationPage();
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(locationPage.SHARED_PREFS, Context.MODE_PRIVATE);
+        location.setText(sharedPreferences.getString(locationPage.SHARED_LOCATION,""));
+
+    }
+
     private void checkoutMenu() {
-        databaseReference.orderByChild("idCustomer").equalTo(userUID).addValueEventListener(new ValueEventListener() {
+        databaseReference.orderByChild("idCustomer").equalTo(userUID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int i = 1;
                 String idTransaksi = String.valueOf(System.currentTimeMillis());
-                Map<String, String> trans = new HashMap<>();
-                trans.put("idTransaksi", idTransaksi);
-                trans.put("idCustomer",userUID);
-                for (DataSnapshot item : snapshot.getChildren()) {
-                    DataCart dataCart = item.getValue(DataCart.class);
-                    trans.put("idCart"+i,dataCart.getIdCart());
-                    i++;
-                }
-                trans.put("totalHarga",String.valueOf(total));
-                trans.put("paymentStatus", "Unverified");
-                trans.put("deliverStatus", "Shipping");
-                trans.put("buktiPembayaran", " ");
-
                 Intent intent = new Intent(getContext(), PaymentPage.class);
+                intent.putExtra("location", location.getText().toString());
                 intent.putExtra("idTransaksi", idTransaksi);
-                intent.putExtra("hashmap", (Serializable) trans);
                 intent.putExtra("totalHarga", total);
                 startActivity(intent);
             }
@@ -139,16 +134,10 @@ public class CheckoutFragment extends Fragment implements LocationListener  {
 
             }
         });
-
-        String idTransaksi = String.valueOf(System.currentTimeMillis());
-        Intent intent = new Intent(getContext(), PaymentPage.class);
-        intent.putExtra("idTransaksi", idTransaksi);
-        intent.putExtra("total", total);
-        startActivity(intent);
     }
 
     private void showAllCart() {
-        databaseReference.orderByChild("idCustomer").equalTo(userUID).addValueEventListener(new ValueEventListener() {
+       listener =  databaseReference.orderByChild("idCustomer").equalTo(userUID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot item : snapshot.getChildren()) {
@@ -158,6 +147,7 @@ public class CheckoutFragment extends Fragment implements LocationListener  {
                     total = total + Integer.parseInt(dataCart.getHargaMenu());
                 }
                 totalHarga.setText(String.valueOf(total));
+                databaseReference.removeEventListener(listener);
                 adapter = new CheckoutAdapter(getContext(), dataCartList);
                 recyclerView.setAdapter(adapter);
             }
@@ -169,50 +159,12 @@ public class CheckoutFragment extends Fragment implements LocationListener  {
 
     }
 
-    @SuppressLint("MissingPermission")
-    private void getCurrentLocation() {
-        try {
-            locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, (LocationListener) CheckoutFragment.this);
-
-        } catch (Exception e) {
-            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-
-    @Override
-    public void onLocationChanged(@NonNull Location location) {
-        Toast.makeText(getContext(), ""+location.getLatitude()+" " +location.getLongitude(), Toast.LENGTH_SHORT).show();
-        try {
-            Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
-            List<Address> addressList = geocoder.getFromLocation(location.getLatitude(),location.getLongitude(), 1);
-            String address = addressList.get(0).getAddressLine(0);
-            etLocation.setText(address);
-
-        } catch (Exception e) {
-            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(@NonNull String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(@NonNull String provider) {
-
-    }
 
     @Override
     public void onResume() {
         super.onResume();
+        total = 0;
+        dataCartList.clear();
         showAllCart();
     }
 }

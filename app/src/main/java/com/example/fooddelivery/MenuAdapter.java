@@ -10,6 +10,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityOptionsCompat;
@@ -86,26 +87,28 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuHolder> im
     Filter filter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
+            Toast.makeText(ctx, "Filtering Ready", Toast.LENGTH_SHORT).show();
             List<DataMenu> databaru = new ArrayList<>();
-            if(constraint.toString().length() == 0 || constraint.toString().isEmpty()) {
-                databaru.addAll(dataMenuList);
+            FilterResults filterResults = new FilterResults();
+            if(constraint.length() == 0 || constraint == null) {
+                filterResults.values = dataMenuList;
+                filterResults.count = dataMenuList.size();
             } else {
                 for(DataMenu item : dataMenuList) {
-                    if(item.getNama().toLowerCase().contains(constraint.toString().toLowerCase())) {
+                    if(item.getNama().toLowerCase().contains(constraint)) {
                         databaru.add(item);
                     }
                 }
             }
-
-            FilterResults filterResults = new FilterResults();
+            filterResults.count = databaru.size();
             filterResults.values = databaru;
+            Toast.makeText(ctx, "Filtering Finish", Toast.LENGTH_SHORT).show();
             return filterResults;
         }
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            dataMenuList.clear();
-            dataMenuList.addAll((Collection<? extends DataMenu>) results.values);
+            dataMenuList = (List<DataMenu>) results.values;
             notifyDataSetChanged();
         }
     };

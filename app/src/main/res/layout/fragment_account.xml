@@ -39,7 +39,7 @@
         </androidx.cardview.widget.CardView>
 
         <TextView
-            android:id="@+id/tologinpage"
+            android:id="@+id/accountName"
             android:layout_below="@id/container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -49,7 +49,7 @@
         <Button
             android:layout_marginTop="60dp"
             android:id="@+id/button_update"
-            android:layout_below="@id/tologinpage"
+            android:layout_below="@id/accountName"
             android:layout_width="match_parent"
             android:text="Update Account"
             android:layout_height="wrap_content"/>
