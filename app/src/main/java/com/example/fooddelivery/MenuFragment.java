@@ -181,6 +181,7 @@ public class MenuFragment extends Fragment implements SearchView.OnQueryTextList
                 etSearch.setAnimation(leftin);
                 etSearch.setVisibility(View.VISIBLE);
                 tableLayout.setVisibility(View.INVISIBLE);
+                etSearch.requestFocus();
             }
         });
 
