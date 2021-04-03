@@ -59,7 +59,7 @@ public class MenuFragment extends Fragment implements SearchView.OnQueryTextList
     private RecyclerView recyclerView;
     private DatabaseReference databaseReference;
     private List<DataMenu> menuList;
-    private ImageView imgSearch; // tinggal diganti ke MenuItem kalau ga salah tehe :c
+    private ImageView imgSearch,imgCancel; // tinggal diganti ke MenuItem kalau ga salah tehe :c
     private MenuAdapter adapter;
     private TextView addmenu;
     private FrameLayout layout;
@@ -87,9 +87,9 @@ public class MenuFragment extends Fragment implements SearchView.OnQueryTextList
         catDesert = view.findViewById(R.id.Kategori_Desert);
         catAll = view.findViewById(R.id.Kategori_All);
         addmenu = view.findViewById(R.id.addData);
-        layout = view.findViewById(R.id.home1);
         imgSearch = view.findViewById(R.id.iconSearch);
         tableLayout = view.findViewById(R.id.categorycontainer);
+        imgCancel = view.findViewById(R.id.cancel_button);
 
 
 
@@ -107,7 +107,6 @@ public class MenuFragment extends Fragment implements SearchView.OnQueryTextList
             public void onClick(View v) {
                 kategori = "Desert";
                 searchKategori(kategori);
-                addmenu.setText("Desert");
             }
         });
 
@@ -116,7 +115,6 @@ public class MenuFragment extends Fragment implements SearchView.OnQueryTextList
             public void onClick(View v) {
                 kategori = "Minuman";
                 searchKategori(kategori);
-                addmenu.setText("Minuman");
             }
         });
 
@@ -125,7 +123,6 @@ public class MenuFragment extends Fragment implements SearchView.OnQueryTextList
             public void onClick(View v) {
                 kategori = "Makanan";
                 searchKategori(kategori);
-                addmenu.setText("Makanan");
             }
         });
 
@@ -146,41 +143,6 @@ public class MenuFragment extends Fragment implements SearchView.OnQueryTextList
             }
         });
 
-
-
-        databaseReference = FirebaseDatabase.getInstance().getReference("data-barang");
-        catAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            showAllMenu();
-            }
-        });
-
-        catDesert.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                kategori = "Desert";
-                searchKategori(kategori);
-            }
-        });
-
-        catMinuman.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                kategori = "Minuman";
-                searchKategori(kategori);
-            }
-        });
-
-        catMakanan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                kategori = "Makanan";
-                searchKategori(kategori);
-            }
-        });
-
-
 // JANGAN DIHAPUS BUAT GALIH WKWKWK
 //        imgSearch = view.findViewById(R.id.iconsearch);
 //        imgSearch.setOnClickListener(new View.OnClickListener() {
@@ -195,9 +157,10 @@ public class MenuFragment extends Fragment implements SearchView.OnQueryTextList
 //                imp.showSoftInput(etSearch, InputMethodManager.SHOW_IMPLICIT);
 //            }
 //        });
-        layout.setOnClickListener(new View.OnClickListener() {
+        imgCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                imgCancel.setVisibility(View.INVISIBLE);
                 etSearch.setVisibility(View.INVISIBLE);
                 imgSearch.setVisibility(View.VISIBLE);
                 rightin = AnimationUtils.loadAnimation(getContext() ,R.anim.push_right_in);
@@ -210,6 +173,7 @@ public class MenuFragment extends Fragment implements SearchView.OnQueryTextList
         imgSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                imgCancel.setVisibility(View.VISIBLE);
                 imgSearch.setVisibility(View.INVISIBLE);
                 leftin = AnimationUtils.loadAnimation(getContext(), R.anim.push_left_in);
                 leftout = AnimationUtils.loadAnimation(getContext(), R.anim.push_left_out);
@@ -217,6 +181,7 @@ public class MenuFragment extends Fragment implements SearchView.OnQueryTextList
                 etSearch.setAnimation(leftin);
                 etSearch.setVisibility(View.VISIBLE);
                 tableLayout.setVisibility(View.INVISIBLE);
+                etSearch.requestFocus();
             }
         });
 
@@ -233,7 +198,7 @@ public class MenuFragment extends Fragment implements SearchView.OnQueryTextList
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
         menuList = new ArrayList<>();
-
+        showAllMenu();
     }
 
 
@@ -241,7 +206,6 @@ public class MenuFragment extends Fragment implements SearchView.OnQueryTextList
     public void onResume() {
         super.onResume();
         menuList.clear();
-
     }
 
     private void SearchMenu(String search){
@@ -266,6 +230,7 @@ public class MenuFragment extends Fragment implements SearchView.OnQueryTextList
     }
 
     private void searchKategori(String kategori) {
+        addmenu.setText(kategori);
         menuList.clear();
         databaseReference.orderByChild("kategori").equalTo(kategori).addValueEventListener(new ValueEventListener() {
             @Override
