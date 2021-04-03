@@ -23,6 +23,15 @@
     <ImageView
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:id="@+id/cancel_button"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/ic_baseline_cancel_24"
+        android:layout_gravity="end"
+        android:visibility="invisible"/>
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:id="@+id/iconSearch"
         android:layout_marginTop="15dp"
         android:layout_marginRight="10dp"
