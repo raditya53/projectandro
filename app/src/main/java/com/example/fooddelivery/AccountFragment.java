@@ -96,9 +96,9 @@ private TextView nama;
         aboutUs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Under Development, Thanks!", Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(getContext(), About_us.class);
-//                startActivity(intent);
+//                Toast.makeText(getContext(), "Under Development, Thanks!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getContext(), About_us.class);
+                startActivity(intent);
             }
         });
         logout.setOnClickListener(new View.OnClickListener() {
